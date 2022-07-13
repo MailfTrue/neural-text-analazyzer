@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  app:
+    image: neural-text-analyzer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+    - ./train:/code/train
+    - ./kinopoisk.jsonl:/code/train/kinopoisk.jsonl
+    ports:
+    - "8000:8000"
