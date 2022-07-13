@@ -1,4 +1,5 @@
 import spacy
+import fire
 from pprint import pprint
 from neural_network import (EmotionExcelNeuralNetworkTrainer,
                             EmotionKinopoiskNeuralNetworkTrainer,
@@ -7,7 +8,7 @@ from neural_network import (EmotionExcelNeuralNetworkTrainer,
 
 def train():
     # Учим эмоциональную модель из наших данных
-    emotion = EmotionExcelNeuralNetworkTrainer(spacy_nlp_model_name="ru_core_news_md",
+    emotion = EmotionExcelNeuralNetworkTrainer(spacy_nlp_model_name="ru_core_news_lg",
                                                model_save_path="models/emotion_model")
     emotion.train_model(*emotion.load_training_data())
 
@@ -23,16 +24,12 @@ def train():
 
 
 def test():
-    emotion_spacy = spacy.load("emotion_model")
-    relevance_spacy = spacy.load("relevance_model")
+    emotion_spacy = spacy.load("models/emotion_model")
 
     with open('test.txt', encoding='utf-8') as f:
         text = f.read()
-        print(text)
-        pprint({k: round(v, 3) for k, v in emotion_spacy(text).cats.items()})
-        pprint({k: round(v, 3) for k, v in relevance_spacy(text).cats.items()})
+        return {k: round(v, 3) for k, v in emotion_spacy(text).cats.items()}
 
 
-if __name__ == "__main__":
-    # train()
-    test()
+if __name__ == '__main__':
+    fire.Fire()
