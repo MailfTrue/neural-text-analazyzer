@@ -28,7 +28,11 @@ class ExcelNeuralnetworkTrainer(AbstractNeuralNetworkTrainer):
             for file_num, file_name in enumerate(file_names):
                 pbar.set_description(desc.format(file_name))
                 if not limit or len(messages) <= limit:
-                    wb = openpyxl.load_workbook(f"{data_directory}/{file_name}")
+                    try:
+                        wb = openpyxl.load_workbook(f"{data_directory}/{file_name}")
+                    except Exception:
+                        pbar.update(100 / len(file_names))
+                        continue
                     ws = wb.active
 
                     pbar_iter_cost = (100 / len(file_names)) * (1 / (ws.max_row - 1))
@@ -57,7 +61,7 @@ class EmotionExcelNeuralNetworkTrainer(ExcelNeuralnetworkTrainer, EmotionNeuralN
                          "neg": "2" == rate}}
 
     def message_is_valid(self, message: list[Cell]):
-        return self.get_message_text(message).strip() and str(message[8].value) in ["1", "2", "3"]
+        return len(message) == 9 and self.get_message_text(message).strip() and str(message[8].value) in ["1", "2", "3"]
 
 
 class RelevanceExcelNeuralNetworkTrainer(ExcelNeuralnetworkTrainer, RelevanceNeuralNetworkTrainerMixin):
