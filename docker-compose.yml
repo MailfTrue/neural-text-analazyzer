@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     volumes:
     - ./train:/code/train
+    - ./models:/code/models
     - ./kinopoisk.jsonl:/code/train/kinopoisk.jsonl
     ports:
     - "8000:8000"
